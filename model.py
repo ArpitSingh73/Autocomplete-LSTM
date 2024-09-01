@@ -110,3 +110,35 @@ y.shape
 from tensorflow.keras.utils import to_categorical
 
 y = to_categorical(y, num_classes=283)
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense
+
+
+model = Sequential()
+model.add(Embedding(283, 100, input_length=56))
+model.add(LSTM(150))
+model.add(LSTM(150))
+model.add(Dense(283, activation="softmax"))
+
+model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+model.summary()
+
+import time
+
+text = "what is the fee"
+
+for i in range(10):
+    # tokenize
+    token_text = tokenizer.texts_to_sequences([text])[0]
+    # padding
+    padded_token_text = pad_sequences([token_text], maxlen=56, padding="pre")
+    # predict
+    pos = np.argmax(model.predict(padded_token_text))
+
+    for word, index in tokenizer.word_index.items():
+        if index == pos:
+            text = text + " " + word
+            print(text)
+            time.sleep(2)
