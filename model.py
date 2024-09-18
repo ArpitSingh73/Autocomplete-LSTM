@@ -142,3 +142,5 @@ for i in range(10):
             text = text + " " + word
             print(text)
             time.sleep(2)
+
+            #Aryan
